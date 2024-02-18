@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "835474148480",
+    "project_id": "trivago-9a945",
+    "storage_bucket": "trivago-9a945.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835474148480:android:03293b85905dfd50d16a65",
+        "android_client_info": {
+          "package_name": "com.example.trivago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835474148480-3elj313ngu088b8fjnh9b7s6f3hva443.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trivago",
+            "certificate_hash": "0ccc63ef2e67b5a503b4d5b80058bb2a8ff29b8e"
+          }
+        },
+        {
+          "client_id": "835474148480-h1190bm17529gcbcrbd99mbokbsjg9jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTP7zopmNzG-jhl91tVq8eI5pNbO2Q5UA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835474148480-h1190bm17529gcbcrbd99mbokbsjg9jn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "835474148480-c66hf214bhhi74f4fugffg4c3h291m8e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.trivago"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
