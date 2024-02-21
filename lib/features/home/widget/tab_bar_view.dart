@@ -1,15 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/district/screen/district_view.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
-import 'package:trivago/features/group_book/screen/group_booking_screen.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
-
-import 'package:trivago/models/booked_models/booked_models.dart';
-
-import '../controller/home_controller.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class TabBarArea extends ConsumerStatefulWidget {
   const TabBarArea({super.key});
@@ -43,9 +35,11 @@ class TabBars extends ConsumerStatefulWidget {
 class _TabBarsState extends ConsumerState<TabBars> {
   @override
   Widget build(BuildContext context) {
-    HomeController homeController = HomeController();
+    BookingController homeController = BookingController();
     final availableRoom = homeController.roomCalculator(
-        ref.watch(homeControllerProvider).selectedDate, ref, widget.district);
+        ref.watch(bookingControllerProvider).selectedDate,
+        ref,
+        widget.district);
 
     return Tab(
       // icon: const Icon(Icons.add),
@@ -75,7 +69,7 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     return Expanded(
       child: ListView(
         children: [
@@ -83,7 +77,9 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
               title: const Text('Breakfast'),
               value: isCheckedBreakfast,
               onChanged: (bool? value) {
-                ref.read(homeControllerProvider.notifier).hasBreakfast(value!);
+                ref
+                    .read(bookingControllerProvider.notifier)
+                    .hasBreakfast(value!);
                 setState(() {
                   isCheckedBreakfast = value;
                 });
@@ -92,7 +88,7 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
               title: const Text('村⺠，导游， 司机'),
               value: isCheckedUK1,
               onChanged: (bool? value) {
-                ref.read(homeControllerProvider.notifier).setUKBool1(value!);
+                ref.read(bookingControllerProvider.notifier).setUKBool1(value!);
                 setState(() {
                   isCheckedUK1 = value;
                 });
@@ -101,7 +97,7 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
               title: const Text('股东'),
               value: isCheckedUK2,
               onChanged: (bool? value) {
-                ref.read(homeControllerProvider.notifier).setUKBool2(value!);
+                ref.read(bookingControllerProvider.notifier).setUKBool2(value!);
                 setState(() {
                   isCheckedUK2 = value;
                 });
@@ -110,7 +106,7 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
               title: const Text('政府⼈员'),
               value: isCheckedUK3,
               onChanged: (bool? value) {
-                ref.read(homeControllerProvider.notifier).setUKBool3(value!);
+                ref.read(bookingControllerProvider.notifier).setUKBool3(value!);
                 setState(() {
                   isCheckedUK3 = value;
                 });
@@ -119,7 +115,7 @@ class _CheckBoxAreaState extends ConsumerState<CheckBoxArea> {
               title: const Text('By Cash'),
               value: isCheckedByCash,
               onChanged: (bool? value) {
-                ref.read(homeControllerProvider.notifier).byCash(value!);
+                ref.read(bookingControllerProvider.notifier).byCash(value!);
                 setState(() {
                   isCheckedByCash = value;
                 });

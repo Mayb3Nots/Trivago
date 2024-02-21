@@ -1,18 +1,17 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
+import 'package:trivago/features/group_booking/repository/group_booking_repository.dart';
+
 import 'package:trivago/features/state/state.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
-part 'home_controller.g.dart';
+part 'booking_controller.g.dart';
 
 @riverpod
-class HomeController extends _$HomeController {
+class BookingController extends _$BookingController {
   @override
   HomeState build() => HomeState(
       selectedDate: DateTime.now(),
@@ -57,7 +56,7 @@ class HomeController extends _$HomeController {
 
   int roomCalculator(
       DateTime selectedDate, WidgetRef ref, DistrictsID district) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
     final groupBookings =
         ref.watch(groupBookingsProvider).valueOrNull ?? <GroupBookingData>[];
@@ -80,7 +79,7 @@ class HomeController extends _$HomeController {
   }
 
   List<DateTime> blackOutDates(WidgetRef ref, DistrictsID id, String roomName) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
     final roomBooked = bookings.where((element) {
       return element.districtID == id && element.roomName == roomName;
@@ -91,7 +90,7 @@ class HomeController extends _$HomeController {
           startDateTime: element.vacantDuration.start,
           endDateTime: element.vacantDuration.end));
     });
-    print(dateBooked);
+
     return dateBooked;
   }
 
@@ -126,7 +125,7 @@ class HomeController extends _$HomeController {
   }
 
   int calculatingLogic(WidgetRef ref) {
-    final home = ref.watch(homeControllerProvider);
+    final home = ref.watch(bookingControllerProvider);
     return (roomData[home.districtID]!.first.defaultPrice *
             home.roomBooked! *
             ((home.timeRange?.duration.inDays ?? 1) + 1) +

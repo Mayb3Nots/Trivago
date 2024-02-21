@@ -1,30 +1,22 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:trivago/constants/colour.dart';
-import 'package:trivago/converter/date_time_range_converter.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
-import 'package:trivago/models/room_models/room_model.dart';
-import 'package:trivago/routes/app_router.gr.dart';
 
-class GroupDetailsDialog extends ConsumerStatefulWidget {
-  const GroupDetailsDialog({
+class DetailsDialog extends ConsumerStatefulWidget {
+  const DetailsDialog({
     super.key,
-    required this.groupBookingData,
+    required this.bookingData,
   });
-  final GroupBookingData groupBookingData;
+  final BookingData bookingData;
 
   @override
   ConsumerState createState() => __ShowDialogState();
 }
 
-class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
+class __ShowDialogState extends ConsumerState<DetailsDialog> {
   final List<String> selectedRoomList = [];
 
   @override
@@ -33,28 +25,57 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
 
     final booking = bookings.where(
       (element) {
-        return element.districtID == widget.groupBookingData.districtID &&
+        return element.districtID == widget.bookingData.districtID &&
             element.doDateTimeRangesOverlap(
-                widget.groupBookingData.vacantDuration.start,
-                widget.groupBookingData.vacantDuration.end,
+                widget.bookingData.vacantDuration.start,
+                widget.bookingData.vacantDuration.end,
                 element.vacantDuration.start,
                 element.vacantDuration.end);
       },
     );
+    List<DateTime> getDaysInBetweenIncludingStartEndDate(
+        {required DateTime startDateTime, required DateTime endDateTime}) {
+      // Converting dates provided to UTC
+      // So that all things like DST don't affect subtraction and addition on dates
+      DateTime startDateInUTC = DateTime.utc(
+          startDateTime.year, startDateTime.month, startDateTime.day);
+      DateTime endDateInUTC =
+          DateTime.utc(endDateTime.year, endDateTime.month, endDateTime.day);
 
-    Color colorDetermine(String name) {
-      final selected = selectedRoomList.firstWhereOrNull((element) {
-        return element.contains(name);
-      });
-      if (selected != null) {
-        return Colors.green.withOpacity(0.7);
+      // Created a list to hold all dates
+      List<DateTime> daysInFormat = [];
+
+      // Starting a loop with the initial value as the Start Date
+      // With an increment of 1 day on each loop
+      // With condition current value of loop is smaller than or same as end date
+      for (DateTime i = startDateInUTC;
+          i.isBefore(endDateInUTC) || i.isAtSameMomentAs(endDateInUTC);
+          i = i.add(const Duration(days: 1))) {
+        // Converting back UTC date to Local date if it was local before
+        // Or keeping in UTC format if it was UTC
+
+        if (startDateTime.isUtc) {
+          daysInFormat.add(i);
+        } else {
+          daysInFormat.add(DateTime(i.year, i.month, i.day));
+        }
       }
-      final booked =
-          booking.firstWhereOrNull((element) => element.roomName == name);
-      return booked != null
-          ? Colors.red.withOpacity(0.7)
-          : Colors.grey.withOpacity(0.7);
+      return daysInFormat;
     }
+    //
+    // Color colorDetermine(String name) {
+    //   final selected = selectedRoomList.firstWhereOrNull((element) {
+    //     return element.contains(name);
+    //   });
+    //   if (selected != null) {
+    //     return Colors.green.withOpacity(0.7);
+    //   }
+    //   final booked =
+    //       booking.firstWhereOrNull((element) => element.roomName == name);
+    //   return booked != null
+    //       ? Colors.red.withOpacity(0.7)
+    //       : Colors.grey.withOpacity(0.7);
+    // }
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -65,7 +86,7 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
           width: width * 0.8,
           child: Text(
             textAlign: TextAlign.center,
-            widget.groupBookingData.customerName,
+            widget.bookingData.customerName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -87,10 +108,9 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.groupBookingData.roomBooked.toString()),
-                  Padding(
-                    child: const Icon(Icons.house),
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: Icon(Icons.house),
                   ),
                   Container(
                     padding: const EdgeInsets.all(2),
@@ -101,54 +121,42 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                           color: Pallete.greyColor,
                         )),
                     child: Text(
-                      widget.groupBookingData.districtID.name,
+                      widget.bookingData.districtID.name,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   color: Pallete.peachColor.withOpacity(0.6),
                 ),
-                child: Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: [
-                    for (RoomModel room
-                        in roomData[widget.groupBookingData.districtID]!)
-                      GestureDetector(
-                        onTap: () {
-                          final booked = booking.firstWhereOrNull(
-                              (element) => element.roomName == room.name);
-                          if (booked != null) {
-                            return;
-                          }
-                          if (selectedRoomList.contains(room.name)) {
-                            selectedRoomList.remove(room.name);
-                          } else {
-                            selectedRoomList.add(room.name);
-                          }
-                          setState(() {});
-                          print(selectedRoomList);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: colorDetermine(room.name),
-                              borderRadius: const BorderRadiusDirectional.all(
-                                  Radius.circular(10))),
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            room.name,
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                child: SfDateRangePicker(
+                  monthCellStyle: DateRangePickerMonthCellStyle(
+                    blackoutDatesDecoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.black.withOpacity(0.3)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
+                    blackoutDateTextStyle: TextStyle(
+                      color: Colors.green.withOpacity(0.6),
+                    ),
+                    cellDecoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5),
                       ),
-                  ],
+                      border: Border.all(color: Colors.white24),
+                    ),
+                  ),
+                  view: DateRangePickerView.month,
+                  monthViewSettings: DateRangePickerMonthViewSettings(
+                    blackoutDates: getDaysInBetweenIncludingStartEndDate(
+                        startDateTime: widget.bookingData.vacantDuration.start,
+                        endDateTime: widget.bookingData.vacantDuration.end),
+                  ),
                 ),
               ),
               Align(
@@ -157,61 +165,61 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Name: ${widget.groupBookingData.customerName}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      'Name: ${widget.bookingData.customerName}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
-                    Text('Person Count: ${widget.groupBookingData.personCount}',
-                        style: TextStyle(
+                    Text('Person Count: ${widget.bookingData.personCount}',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16)),
                     Text(
-                      'Phone Number: ${widget.groupBookingData.phoneNumber}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      'Phone Number: ${widget.bookingData.phoneNumber}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text(
-                      'Total Price: ${widget.groupBookingData.totalPrice}฿',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      'Total Price: ${widget.bookingData.totalPrice}฿',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
-                    Divider(),
-                    if (widget.groupBookingData.byCash == true)
-                      Text(
+                    const Divider(),
+                    if (widget.bookingData.byCash == true)
+                      const Text(
                         '•By Cash',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
-                    if (widget.groupBookingData.hasBreakfastService == true)
-                      Text(
+                    if (widget.bookingData.hasBreakfastService == true)
+                      const Text(
                         '•Breakfast Available',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
-                    if (widget.groupBookingData.unknownBool1 == true)
-                      Text(
+                    if (widget.bookingData.unknownBool1 == true)
+                      const Text(
                         '•村⺠，导游， 司机',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
-                    if (widget.groupBookingData.unknownBool2 == true)
-                      Text(
+                    if (widget.bookingData.unknownBool2 == true)
+                      const Text(
                         '•股东',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
-                    if (widget.groupBookingData.unknownBool3 == true)
-                      Text(
+                    if (widget.bookingData.unknownBool3 == true)
+                      const Text(
                         '•政府⼈员',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     Row(
                       children: [
-                        GroupDetailsButton(
+                        DetailsButton(
                           function: () {
                             ref
-                                .watch(groupBookingRepositoryProvider)
-                                .deleteGroupBooking(widget.groupBookingData.id);
+                                .watch(bookingRepositoryProvider)
+                                .deleteGroupBooking(widget.bookingData.id);
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
@@ -219,30 +227,7 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                           colour: Colors.red,
                           confirmTitle: 'Confirm Delete Booking?',
                           selectedRoomList: selectedRoomList,
-                          roomBooked: widget.groupBookingData.roomBooked,
                         ),
-                        GroupDetailsButton(
-                          confirmTitle: 'Confirm Booking?',
-                          function: () {
-                            if (selectedRoomList.length ==
-                                widget.groupBookingData.roomBooked) {
-                              ref
-                                  .watch(groupBookingRepositoryProvider)
-                                  .convertGroupToSingle(selectedRoomList, ref,
-                                      widget.groupBookingData);
-                              ref
-                                  .watch(groupBookingRepositoryProvider)
-                                  .deleteGroupBooking(
-                                      widget.groupBookingData.id);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            }
-                          },
-                          button: 'Book',
-                          colour: Colors.green,
-                          selectedRoomList: selectedRoomList,
-                          roomBooked: widget.groupBookingData.roomBooked,
-                        )
                       ],
                     )
                   ],
@@ -256,20 +241,20 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
   }
 }
 
-class GroupDetailsButton extends StatelessWidget {
-  const GroupDetailsButton(
-      {super.key,
-      required this.button,
-      required this.colour,
-      required this.function,
-      required this.confirmTitle,
-      required this.selectedRoomList,
-      required this.roomBooked});
+class DetailsButton extends StatelessWidget {
+  const DetailsButton({
+    super.key,
+    required this.button,
+    required this.colour,
+    required this.function,
+    required this.confirmTitle,
+    required this.selectedRoomList,
+  });
   final String button;
   final Color colour;
   final String confirmTitle;
   final Function function;
-  final int roomBooked;
+
   final List selectedRoomList;
 
   @override
@@ -279,12 +264,11 @@ class GroupDetailsButton extends StatelessWidget {
 
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(foregroundColor: colour),
           onPressed: () {
-            final _test = SizedBox();
-            final _show = showDialog(
+            showDialog(
                 context: context,
                 builder: (context) {
                   return Center(
@@ -293,16 +277,17 @@ class GroupDetailsButton extends StatelessWidget {
                       height: 200,
                       decoration: BoxDecoration(
                           color: Pallete.peachColor,
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             confirmTitle,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           Row(
@@ -312,12 +297,13 @@ class GroupDetailsButton extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Cancel',
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.redAccent)),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               ElevatedButton(
@@ -327,7 +313,7 @@ class GroupDetailsButton extends StatelessWidget {
                                   // AutoRouter.of(context)
                                   //     .push(GroupBookingOverviewRoute());
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Confirm',
                                   style: TextStyle(color: Colors.black),
                                 ),
@@ -339,17 +325,10 @@ class GroupDetailsButton extends StatelessWidget {
                     ),
                   );
                 });
-            if (button == 'Book' && selectedRoomList.length == roomBooked) {
-              print('dd');
-              _show;
-            } else if (button == 'Delete') {
-              print('dadada');
-              _show;
-            } else {
-              _test;
-            }
           },
-          child: Text(button),
+          child: Text(
+            button,
+          ),
         ),
       ),
     );

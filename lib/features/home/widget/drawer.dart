@@ -8,7 +8,7 @@ import 'package:trivago/routes/app_router.gr.dart';
 class GeneralDrawer extends ConsumerWidget {
   const GeneralDrawer({super.key});
   void navigateToGroupBookingOverview(BuildContext context) {
-    AutoRouter.of(context).push(GroupBookingOverviewRoute());
+    AutoRouter.of(context).push(const GroupBookingOverviewRoute());
   }
 
   void navigateToHome(BuildContext context) {
@@ -16,7 +16,7 @@ class GeneralDrawer extends ConsumerWidget {
   }
 
   void navigateToBookingOverview(BuildContext context) {
-    AutoRouter.of(context).push(BookingOverviewRoute());
+    AutoRouter.of(context).push(const BookingOverviewRoute());
   }
 
   @override
@@ -26,21 +26,21 @@ class GeneralDrawer extends ConsumerWidget {
           child: Column(
         children: [
           ListTile(
-            title: Text('Home'),
-            leading: Icon(Icons.house),
+            title: const Text('Home'),
+            leading: const Icon(Icons.house),
             onTap: () {
               navigateToHome(context);
             },
           ),
           ListTile(
-              title: Text('Bookings'),
-              leading: Icon(Icons.person),
+              title: const Text('Bookings'),
+              leading: const Icon(Icons.person),
               onTap: () {
                 navigateToBookingOverview(context);
               }),
           ListTile(
-            title: Text('Group Bookings'),
-            leading: Icon(Icons.group),
+            title: const Text('Group Bookings'),
+            leading: const Icon(Icons.group),
             onTap: () {
               navigateToGroupBookingOverview(context);
             },

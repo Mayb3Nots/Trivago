@@ -12,37 +12,37 @@ class BookedList extends StatelessWidget {
         Align(
           alignment: Alignment.topLeft,
           child: Row(children: [
-            Text(
+            const Text(
               'John Xina 5',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            Icon(Icons.people),
+            const Icon(Icons.people),
             Padding(
-              padding: EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
               child: Container(
-                padding: EdgeInsets.all(3),
-                child: Text(
+                padding: const EdgeInsets.all(3),
+                child: const Text(
                   'Jan 17,2024',
                 ),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
               ),
             ),
-            Icon(Icons.arrow_right_alt),
+            const Icon(Icons.arrow_right_alt),
             Padding(
-              padding: EdgeInsets.all(2),
+              padding: const EdgeInsets.all(2),
               child: Container(
-                padding: EdgeInsets.all(3),
-                child: Text(
+                padding: const EdgeInsets.all(3),
+                child: const Text(
                   'Jan 27,2024',
                 ),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),

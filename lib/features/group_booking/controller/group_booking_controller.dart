@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
+import 'package:trivago/features/group_booking/repository/group_booking_repository.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
-
-import '../../home/controller/home_controller.dart';
-import '../../home/repository/booking_repository.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class GroupBookingController {
   int roomCalculator(DistrictsID e, WidgetRef ref) {
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
-    final data = ref.read(homeControllerProvider).timeRange;
+    final data = ref.read(bookingControllerProvider).timeRange;
     final roomBooked = bookings.where((element) {
       return element.doDateTimeRangesOverlap(
               data?.start ?? DateTime.now(),
@@ -41,7 +39,7 @@ class GroupBookingController {
   }
 
   int calculatingLogic(WidgetRef ref) {
-    final home = ref.watch(homeControllerProvider);
+    final home = ref.watch(bookingControllerProvider);
     return (roomData[home.districtID]!.first.defaultPrice *
             home.roomBooked! *
             ((home.timeRange?.duration.inDays ?? 1) + 1) +

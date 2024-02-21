@@ -5,10 +5,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:trivago/core/failure.dart';
 import 'package:trivago/core/snack_bar.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/controller/group_booking_controller.dart';
-import 'package:trivago/features/group_book/widget/group_book_button.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/features/group_booking/controller/group_booking_controller.dart';
+import 'package:trivago/features/group_booking/widget/group_book_button.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class GroupBookingScreen extends ConsumerStatefulWidget {
   const GroupBookingScreen({super.key});
@@ -28,7 +28,7 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
         priceController.text =
             groupBookingController.calculatingLogic(ref).toString();
         ref
-            .read(homeControllerProvider.notifier)
+            .read(bookingControllerProvider.notifier)
             .setTotalPrice(groupBookingController.calculatingLogic(ref));
         //
       });
@@ -40,11 +40,11 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
 
     // final availableRoom = groupBookingController.roomCalculator(
     //     ref.watch(homeControllerProvider).districtID ?? DistrictsID.A, ref);
-    final homeFunction = ref.read(homeControllerProvider.notifier);
+    final homeFunction = ref.read(bookingControllerProvider.notifier);
 
-    ref.read(homeControllerProvider);
+    ref.read(bookingControllerProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ElevatedButton.icon(
           onPressed: () {
             homeFunction.setDistrictID(DistrictsID.A);
@@ -112,7 +112,8 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                     },
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
                                     child: TextField(
                                       onChanged: (data) {
                                         homeFunction.setCustomerName(data);
@@ -147,7 +148,7 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                     },
                                     autovalidateMode: AutovalidateMode.always,
                                     keyboardType: TextInputType.number,
-                                    inputFormatters: [],
+                                    inputFormatters: const [],
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(5),
                                       border: OutlineInputBorder(),
@@ -180,7 +181,7 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                       },
                                       autovalidateMode: AutovalidateMode.always,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [],
+                                      inputFormatters: const [],
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.all(5),
                                         border: OutlineInputBorder(),
@@ -211,7 +212,7 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                     },
                                     autovalidateMode: AutovalidateMode.always,
                                     keyboardType: TextInputType.number,
-                                    inputFormatters: [],
+                                    inputFormatters: const [],
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(5),
                                       border: OutlineInputBorder(),
@@ -245,15 +246,15 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                       },
                                       autovalidateMode: AutovalidateMode.always,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [],
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.all(5),
-                                        border: const OutlineInputBorder(),
+                                      inputFormatters: const [],
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.all(5),
+                                        border: OutlineInputBorder(),
                                         labelText: 'Price',
                                       ),
                                     ),
                                   ),
-                                  Text(
+                                  const Text(
                                     'District',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w600),
@@ -315,7 +316,7 @@ class _DistrictButtonBarState extends ConsumerState<DistrictButtonBar> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     final width = MediaQuery.of(context).size.width;
 
     return ToggleButtons(
@@ -333,7 +334,7 @@ class _DistrictButtonBarState extends ConsumerState<DistrictButtonBar> {
           children: [
             Text(
               e.name,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(
               width: width / 50 + 20,
@@ -355,7 +356,7 @@ class _DistrictButtonBarState extends ConsumerState<DistrictButtonBar> {
           }
 
           ref
-              .read(homeControllerProvider.notifier)
+              .read(bookingControllerProvider.notifier)
               .setDistrictID(districtsID[index]);
           widget.id(districtsID[index]);
         });
