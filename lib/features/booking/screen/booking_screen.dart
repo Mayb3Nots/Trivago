@@ -129,7 +129,6 @@ class DistrictTiles extends ConsumerWidget {
                                           end: value.endDate!));
                                       updateCalculatedPrice();
                                     } else {
-                                      print('2');
                                       homeFunction.setDateRange(DateTimeRange(
                                           start: value.startDate!,
                                           end: value.startDate!));

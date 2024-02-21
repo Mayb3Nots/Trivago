@@ -21,7 +21,6 @@ class GroupBookButton extends ConsumerStatefulWidget {
 
 class _GroupBookButtonState extends ConsumerState<GroupBookButton> {
   Either bookRoom(HomeState state, WidgetRef ref) {
-    print(ref.read(groupBookingRepositoryProvider));
     try {
       return right(ref.read(groupBookingRepositoryProvider).bookRoom(
         context,

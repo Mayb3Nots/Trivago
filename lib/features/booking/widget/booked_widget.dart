@@ -21,14 +21,14 @@ class BookedList extends StatelessWidget {
               padding: const EdgeInsets.all(3),
               child: Container(
                 padding: const EdgeInsets.all(3),
-                child: const Text(
-                  'Jan 17,2024',
-                ),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.1),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
+                ),
+                child: const Text(
+                  'Jan 17,2024',
                 ),
               ),
             ),
@@ -37,14 +37,14 @@ class BookedList extends StatelessWidget {
               padding: const EdgeInsets.all(2),
               child: Container(
                 padding: const EdgeInsets.all(3),
-                child: const Text(
-                  'Jan 27,2024',
-                ),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.1),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
+                ),
+                child: const Text(
+                  'Jan 27,2024',
                 ),
               ),
             ),

@@ -278,8 +278,8 @@ class GroupDetailsButton extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(foregroundColor: colour),
           onPressed: () {
-            const _test = SizedBox();
-            final _show = showDialog(
+            const test = SizedBox();
+            final show = showDialog(
                 context: context,
                 builder: (context) {
                   return Center(
@@ -336,12 +336,11 @@ class GroupDetailsButton extends StatelessWidget {
                   );
                 });
             if (button == 'Book' && selectedRoomList.length == roomBooked) {
-              print('dd');
-              _show;
+              show;
             } else if (button == 'Delete') {
-              _show;
+              show;
             } else {
-              _test;
+              test;
             }
           },
           child: Text(button),

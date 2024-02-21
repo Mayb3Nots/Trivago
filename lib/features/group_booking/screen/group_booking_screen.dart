@@ -228,7 +228,7 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                         if (txt.isNotEmpty) {
                                           final data = int.tryParse(txt);
                                           if (data == null) return;
-                                          print('dada');
+
                                           homeFunction.setTotalPrice(data);
                                         }
                                       },

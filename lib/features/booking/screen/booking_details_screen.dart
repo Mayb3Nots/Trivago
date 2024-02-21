@@ -297,12 +297,12 @@ class DetailsButton extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent),
                                   child: const Text(
                                     'Cancel',
                                     style: TextStyle(color: Colors.black),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.redAccent)),
+                                  )),
                               const SizedBox(
                                 width: 10,
                               ),

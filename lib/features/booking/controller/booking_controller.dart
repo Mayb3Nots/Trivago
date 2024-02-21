@@ -85,11 +85,11 @@ class BookingController extends _$BookingController {
       return element.districtID == id && element.roomName == roomName;
     });
     List<DateTime> dateBooked = [];
-    roomBooked.forEach((element) {
+    for (var element in roomBooked) {
       dateBooked.addAll(getDaysInBetweenIncludingStartEndDate(
           startDateTime: element.vacantDuration.start,
           endDateTime: element.vacantDuration.end));
-    });
+    }
 
     return dateBooked;
   }

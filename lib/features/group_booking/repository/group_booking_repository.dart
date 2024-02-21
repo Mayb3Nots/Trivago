@@ -58,7 +58,6 @@ class GroupBookingRepository {
         call(e.toString());
       }
 
-      print(e);
       return left(Failure(e.toString()));
     }
   }
