@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'package:json_annotation/json_annotation.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/district/screen/district_view.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 import '../../converter/date_time_range_converter.dart';
-import 'package:flutter/foundation.dart';
-import '../../features/home/controller/home_controller.dart';
-import '../room_models/room_model.dart';
 
 part 'booked_models.freezed.dart';
 part 'booked_models.g.dart';

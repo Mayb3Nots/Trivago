@@ -1,8 +1,7 @@
-import 'package:trivago/models/booked_models/booked_models.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
-import '../../features/district/controller/districts_data.dart';
 part 'room_model.freezed.dart';
 part 'room_model.g.dart';
 

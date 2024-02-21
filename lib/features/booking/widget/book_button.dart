@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:trivago/core/failure.dart';
-import 'package:trivago/core/snack_bar.dart';
-import 'package:trivago/core/type_defs.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
-
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/features/state/state.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class BookButton extends ConsumerStatefulWidget {
   const BookButton(
@@ -35,7 +32,6 @@ class _BookButtonState extends ConsumerState<BookButton> {
   Either bookRoom(HomeState state, WidgetRef ref) {
     try {
       if (widget.availableRoom > 0) {
-        print('dadad');
         return right(
           ref.read(bookingRepositoryProvider).bookRoom(
             BookingData(
@@ -69,13 +65,13 @@ class _BookButtonState extends ConsumerState<BookButton> {
   Widget build(
     BuildContext context,
   ) {
-    final home = ref.read(homeControllerProvider.notifier);
+    final home = ref.read(bookingControllerProvider.notifier);
     return OutlinedButton(
         onPressed: () {
           home.setRoomName(widget.name);
 
           home.setDistrictID(widget.districtID);
-          bookRoom(ref.read(homeControllerProvider), ref);
+          bookRoom(ref.read(bookingControllerProvider), ref);
           Navigator.pop(context);
         },
         child: const Text('Book'));

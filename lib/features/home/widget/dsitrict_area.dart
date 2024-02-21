@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/district/screen/district_view.dart';
+import 'package:trivago/features/booking/screen/booking_screen.dart';
 import 'package:trivago/models/room_models/room_model.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class DistrictView extends ConsumerStatefulWidget {
   const DistrictView({super.key});

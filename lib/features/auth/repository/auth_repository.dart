@@ -57,8 +57,7 @@ class AuthRepository {
       }
 
       return right(userModel);
-    } on FirebaseException catch (e, stacktrace) {
-      print(stacktrace);
+    } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
       return left(Failure(e.toString()));

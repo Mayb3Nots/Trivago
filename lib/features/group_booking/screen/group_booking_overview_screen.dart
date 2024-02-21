@@ -1,18 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivago/constants/colour.dart';
 import 'package:trivago/core/error_text.dart';
 import 'package:trivago/core/loader.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
-import 'package:trivago/features/group_book/screen/group_booking_details_screen.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
-import 'package:trivago/features/home/widget/drawer.dart';
 import 'package:intl/intl.dart';
-import 'package:trivago/models/booked_models/booked_models.dart';
-import 'package:trivago/models/room_models/room_model.dart';
+import 'package:trivago/features/home/widget/drawer.dart';
+import 'package:trivago/features/group_booking/repository/group_booking_repository.dart';
+import 'package:trivago/features/group_booking/screen/group_booking_details_screen.dart';
 
 @RoutePage()
 class GroupBookingOverviewScreen extends ConsumerStatefulWidget {
@@ -49,7 +44,7 @@ class _GroupBookingOverviewScreenState
           body: ref.watch(groupBookingsProvider).when(
                 data: (data) {
                   return data.isEmpty
-                      ? Center(
+                      ? const Center(
                           child: Text(
                             'No Group Bookings Currently  ¯\\_(ツ)_/¯',
                             style: TextStyle(fontSize: 16),
@@ -61,7 +56,6 @@ class _GroupBookingOverviewScreenState
                             final width = MediaQuery.of(context).size.width;
                             final bookingData = data[index];
 
-                            print(data);
                             return InkWell(
                               onTap: () {
                                 showDialog(
@@ -137,8 +131,9 @@ class _GroupBookingOverviewScreenState
                                               size: 20,
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               child: Column(
                                                 children: [
                                                   Container(

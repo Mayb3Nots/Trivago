@@ -48,7 +48,7 @@ class AuthenticationGuard extends AutoRouteGuard {
       // we redirect the user to our login page
       // tip: use resolver.redirect to have the redirected route
       // automatically removed from the stack when the resolver is completed
-      resolver.redirect(SignInRoute());
+      resolver.redirect(const SignInRoute());
     }
   }
 }

@@ -2,20 +2,19 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:trivago/constants/colour.dart';
-import 'package:trivago/features/group_book/screen/group_booking_screen.dart';
-import 'package:trivago/features/home/widget/drawer.dart';
 import 'package:trivago/features/auth/controller/auth_controller.dart';
 import 'package:intl/intl.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/screen/dsitrict_area.dart';
-import 'package:trivago/features/home/screen/tab_bar_view.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/features/home/widget/drawer.dart';
 import 'package:trivago/features/home/widget/select_date_button.dart';
+import 'package:trivago/features/group_booking/screen/group_booking_screen.dart';
+import 'package:trivago/features/home/widget/dsitrict_area.dart';
+import 'package:trivago/features/home/widget/tab_bar_view.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   ConsumerState createState() => _HomeScreenState();
@@ -36,8 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(
     BuildContext context,
   ) {
-    final user = ref.watch(userProvider);
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     return MaterialApp(
       theme: Pallete.lightModeAppTheme,
       debugShowCheckedModeBanner: false,
@@ -52,9 +50,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               icon: const Icon(Icons.menu),
             );
           }),
-          actions: [
-            // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          ],
+          // actions: [
+          //   // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          // ],
         ),
         drawer: const GeneralDrawer(),
         body: HomeScreenScaffold(
@@ -62,7 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             setState(() {
               selectedTime = selectedTime.subtract(const Duration(days: 1));
               ref
-                  .read(homeControllerProvider.notifier)
+                  .read(bookingControllerProvider.notifier)
                   .setSelectedDate(selectedTime);
             });
           },
@@ -70,13 +68,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             setState(() {
               selectedTime = selectedTime.add(const Duration(days: 1));
               ref
-                  .read(homeControllerProvider.notifier)
+                  .read(bookingControllerProvider.notifier)
                   .setSelectedDate(selectedTime);
             });
           },
           time: (data) {
             setState(() {
-              ref.read(homeControllerProvider.notifier).setSelectedDate(data);
+              ref
+                  .read(bookingControllerProvider.notifier)
+                  .setSelectedDate(data);
               selectedTime = data;
             });
           },
@@ -87,7 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class HomeScreenScaffold extends ConsumerStatefulWidget {
-  HomeScreenScaffold({
+  const HomeScreenScaffold({
     super.key,
     required this.onDateIncrease,
     required this.onDateDecrease,
@@ -104,17 +104,17 @@ class HomeScreenScaffold extends ConsumerStatefulWidget {
 class _HomeScreenScaffoldState extends ConsumerState<HomeScreenScaffold> {
   @override
   Widget build(BuildContext context) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     return DefaultTabController(
       length: 7,
       child: Column(
         children: [
           const DistrictView(),
-          Divider(
+          const Divider(
             height: 0,
           ),
           const CheckBoxArea(),
-          Divider(
+          const Divider(
             height: 0,
           ),
           const TabBarArea(),
@@ -123,7 +123,7 @@ class _HomeScreenScaffoldState extends ConsumerState<HomeScreenScaffold> {
             children: [
               IconButton(
                 onPressed: () {
-                  ref.watch(homeControllerProvider);
+                  ref.watch(bookingControllerProvider);
                   widget.onDateDecrease();
                 },
                 icon: const Icon(Icons.keyboard_arrow_left_rounded),
@@ -132,10 +132,10 @@ class _HomeScreenScaffoldState extends ConsumerState<HomeScreenScaffold> {
               Expanded(
                 child: SelectDateButton(widget: widget, ref: ref),
               ),
-              Expanded(child: GroupBookingScreen()),
+              const Expanded(child: GroupBookingScreen()),
               IconButton(
                 onPressed: () {
-                  ref.watch(homeControllerProvider);
+                  ref.watch(bookingControllerProvider);
                   widget.onDateIncrease();
                 },
                 icon: const Icon(Icons.keyboard_arrow_right),

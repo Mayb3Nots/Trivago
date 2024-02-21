@@ -1,15 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:routemaster/routemaster.dart';
 import 'package:trivago/features/auth/controller/auth_controller.dart';
-
 import 'package:trivago/routes/app_router.dart';
-import 'package:trivago/routes/app_router.gr.dart';
 import 'constants/colour.dart';
 import 'core/error_text.dart';
 import 'core/loader.dart';
@@ -22,7 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: MyApp(),
     ),
   );
@@ -45,14 +40,14 @@ class _MyAppState extends ConsumerState<MyApp> {
       DeviceOrientation.portraitUp,
     ]);
     UserModel? userModel;
-    void getData(WidgetRef ref, User data) async {
-      userModel = await ref
-          .watch(authControllerProvider.notifier)
-          .getUserData(data.uid)
-          .first;
-      ref.read(userProvider.notifier).update((state) => userModel);
-      setState(() {});
-    }
+    // void getData(WidgetRef ref, User data) async {
+    //   userModel = await ref
+    //       .watch(authControllerProvider.notifier)
+    //       .getUserData(data.uid)
+    //       .first;
+    //   ref.read(userProvider.notifier).update((state) => userModel);
+    //   setState(() {});
+    // }
 
     AppRouter appRouter = AppRouter(ref: ref);
     return ref.watch(authStateChangeProvider).when(

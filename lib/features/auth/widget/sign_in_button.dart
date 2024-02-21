@@ -22,15 +22,15 @@ class SignInButton extends ConsumerWidget {
         width: 40,
       ),
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 40),
         backgroundColor: Pallete.greyColor,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(20),
           ),
         ),
       ),
-      label: Text(
+      label: const Text(
         'Continue with Google',
         style: TextStyle(fontSize: 18),
       ),

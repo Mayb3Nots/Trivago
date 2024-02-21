@@ -23,7 +23,7 @@ class DateTimeRangeConverter
 }
 
 extension DateTimeExtension on DateTime {
-  DateTime get dateOnly => DateTime(this.year, this.month, this.day);
+  DateTime get dateOnly => DateTime(year, month, day);
   bool? isAfterOrEqualTo(DateTime dateTime) {
     final date = this;
     final isAtSameMomentAs = dateTime.dateOnly.isAtSameMomentAs(date.dateOnly);

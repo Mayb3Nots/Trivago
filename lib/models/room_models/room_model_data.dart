@@ -1,5 +1,3 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:trivago/features/home/screen/dsitrict_area.dart';
 import 'package:trivago/models/room_models/room_model.dart';
 
 enum DistrictsID {
@@ -14,7 +12,6 @@ enum DistrictsID {
   static DistrictsID fromName(String? name) {
     for (DistrictsID enumVariant in DistrictsID.values) {
       if (enumVariant.name == name) return enumVariant;
-      print('dog');
     }
     return DistrictsID.A;
   }

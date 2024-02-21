@@ -1,21 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:trivago/constants/colour.dart';
 import 'package:trivago/converter/date_time_range_converter.dart';
 import 'package:trivago/core/snack_bar.dart';
-import 'package:trivago/features/district/widget/book_button.dart';
-import 'package:trivago/features/district/widget/booked_widget.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
-
+import 'package:trivago/features/booking/controller/booking_controller.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
+import 'package:trivago/features/booking/widget/book_button.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
 import 'package:trivago/models/room_models/room_model.dart';
 
 class DistrictTiles extends ConsumerWidget {
-  DistrictTiles({
+  const DistrictTiles({
     required this.roomModel,
     super.key,
   });
@@ -24,20 +20,20 @@ class DistrictTiles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    ref.watch(homeControllerProvider);
+    ref.watch(bookingControllerProvider);
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
 
     final booking = bookings.firstWhereOrNull(
       (element) {
         return element.roomName == roomModel.name &&
             element.districtID == roomModel.district &&
-            ref.read(homeControllerProvider).selectedDate.isBetween(
+            ref.read(bookingControllerProvider).selectedDate.isBetween(
                 element.vacantDuration.start, element.vacantDuration.end);
       },
     );
-    HomeController homeController = HomeController();
-    final availableRoom = homeController.roomCalculator(
-        ref.watch(homeControllerProvider).selectedDate,
+    BookingController bookingController = BookingController();
+    final availableRoom = bookingController.roomCalculator(
+        ref.watch(bookingControllerProvider).selectedDate,
         ref,
         roomModel.district);
 
@@ -47,10 +43,10 @@ class DistrictTiles extends ConsumerWidget {
 
     TextEditingController priceController = TextEditingController();
     void updateCalculatedPrice() {
-      priceController.text = homeController.calculatingLogic(ref).toString();
+      priceController.text = bookingController.calculatingLogic(ref).toString();
       ref
-          .read(homeControllerProvider.notifier)
-          .setTotalPrice(homeController.calculatingLogic(ref));
+          .read(bookingControllerProvider.notifier)
+          .setTotalPrice(bookingController.calculatingLogic(ref));
     }
 
     Color colorDetermine() {
@@ -84,7 +80,7 @@ class DistrictTiles extends ConsumerWidget {
                 content: Builder(
                   builder: (context) {
                     final homeFunction =
-                        ref.read(homeControllerProvider.notifier);
+                        ref.read(bookingControllerProvider.notifier);
                     // Get available height and width of the build area of this widget. Make a choice depending on the size.
                     var height = MediaQuery.of(context).size.height;
                     var width = MediaQuery.of(context).size.width;
@@ -98,7 +94,7 @@ class DistrictTiles extends ConsumerWidget {
                             children: [
                               SfDateRangePicker(
                                 initialDisplayDate: ref
-                                    .read(homeControllerProvider)
+                                    .read(bookingControllerProvider)
                                     .selectedDate,
                                 enablePastDates: false,
                                 headerStyle: const DateRangePickerHeaderStyle(
@@ -116,7 +112,8 @@ class DistrictTiles extends ConsumerWidget {
                                 ),
                                 monthViewSettings:
                                     DateRangePickerMonthViewSettings(
-                                  blackoutDates: homeController.blackOutDates(
+                                  blackoutDates:
+                                      bookingController.blackOutDates(
                                     ref,
                                     roomModel.district,
                                     roomModel.name,
@@ -132,7 +129,6 @@ class DistrictTiles extends ConsumerWidget {
                                           end: value.endDate!));
                                       updateCalculatedPrice();
                                     } else {
-                                      print('2');
                                       homeFunction.setDateRange(DateTimeRange(
                                           start: value.startDate!,
                                           end: value.startDate!));
@@ -148,13 +144,13 @@ class DistrictTiles extends ConsumerWidget {
                                 selectionMode:
                                     DateRangePickerSelectionMode.range,
                               ),
-                              const BookedList(),
+                              // const BookedList(),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 5),
                                 child: TextField(
                                   onChanged: ref
-                                      .read(homeControllerProvider.notifier)
+                                      .read(bookingControllerProvider.notifier)
                                       .setCustomerName,
                                   textCapitalization:
                                       TextCapitalization.sentences,
@@ -185,7 +181,7 @@ class DistrictTiles extends ConsumerWidget {
                                 },
                                 autovalidateMode: AutovalidateMode.always,
                                 keyboardType: TextInputType.number,
-                                inputFormatters: [],
+                                inputFormatters: const [],
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.all(5),
                                   border: OutlineInputBorder(),
@@ -218,7 +214,7 @@ class DistrictTiles extends ConsumerWidget {
                                   },
                                   autovalidateMode: AutovalidateMode.always,
                                   keyboardType: TextInputType.number,
-                                  inputFormatters: [],
+                                  inputFormatters: const [],
                                   decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.all(5),
                                     border: OutlineInputBorder(),
@@ -249,7 +245,7 @@ class DistrictTiles extends ConsumerWidget {
                                 },
                                 autovalidateMode: AutovalidateMode.always,
                                 keyboardType: TextInputType.number,
-                                inputFormatters: [],
+                                inputFormatters: const [],
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.all(5),
                                   border: OutlineInputBorder(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:trivago/constants/colour.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
 
 class DetailsDialog extends ConsumerStatefulWidget {
@@ -108,9 +108,9 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    child: const Icon(Icons.house),
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: Icon(Icons.house),
                   ),
                   Container(
                     padding: const EdgeInsets.all(2),
@@ -128,7 +128,7 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -139,7 +139,8 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                     blackoutDatesDecoration: BoxDecoration(
                         border:
                             Border.all(color: Colors.black.withOpacity(0.3)),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                     blackoutDateTextStyle: TextStyle(
                       color: Colors.green.withOpacity(0.6),
                     ),
@@ -165,49 +166,49 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                   children: [
                     Text(
                       'Name: ${widget.bookingData.customerName}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text('Person Count: ${widget.bookingData.personCount}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16)),
                     Text(
                       'Phone Number: ${widget.bookingData.phoneNumber}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text(
                       'Total Price: ${widget.bookingData.totalPrice}฿',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
-                    Divider(),
+                    const Divider(),
                     if (widget.bookingData.byCash == true)
-                      Text(
+                      const Text(
                         '•By Cash',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.bookingData.hasBreakfastService == true)
-                      Text(
+                      const Text(
                         '•Breakfast Available',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.bookingData.unknownBool1 == true)
-                      Text(
+                      const Text(
                         '•村⺠，导游， 司机',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.bookingData.unknownBool2 == true)
-                      Text(
+                      const Text(
                         '•股东',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.bookingData.unknownBool3 == true)
-                      Text(
+                      const Text(
                         '•政府⼈员',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
@@ -263,7 +264,7 @@ class DetailsButton extends StatelessWidget {
 
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(foregroundColor: colour),
           onPressed: () {
@@ -276,16 +277,17 @@ class DetailsButton extends StatelessWidget {
                       height: 200,
                       decoration: BoxDecoration(
                           color: Pallete.peachColor,
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             confirmTitle,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           Row(
@@ -295,13 +297,13 @@ class DetailsButton extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent),
+                                  child: const Text(
                                     'Cancel',
                                     style: TextStyle(color: Colors.black),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.redAccent)),
-                              SizedBox(
+                                  )),
+                              const SizedBox(
                                 width: 10,
                               ),
                               ElevatedButton(
@@ -311,7 +313,7 @@ class DetailsButton extends StatelessWidget {
                                   // AutoRouter.of(context)
                                   //     .push(GroupBookingOverviewRoute());
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Confirm',
                                   style: TextStyle(color: Colors.black),
                                 ),

@@ -10,5 +10,7 @@ final authProvider = Provider((ref) => FirebaseAuth.instance);
 
 final storageProvider = Provider((ref) => FirebaseStorage.instance);
 
-final googleSignInProvider =
-    Provider((ref) => GoogleSignIn(scopes: ['profile', 'email']));
+final googleSignInProvider = Provider((ref) => GoogleSignIn(
+    scopes: ['profile', 'email'],
+    clientId:
+        '835474148480-81mvj92hhksksbsqd5c9k717coa6vm92.apps.googleusercontent.com'));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
 import 'package:trivago/features/home/screen/home_screen.dart';
 
 class SelectDateButton extends StatelessWidget {
@@ -28,7 +28,7 @@ class SelectDateButton extends StatelessWidget {
                         onSelectionChanged: (CalendarSelectionDetails details) {
                           widget.time(details.date!);
                           ref
-                              .read(homeControllerProvider.notifier)
+                              .read(bookingControllerProvider.notifier)
                               .setSelectedDate(details.date!);
 
                           Navigator.pop(context);
@@ -36,8 +36,8 @@ class SelectDateButton extends StatelessWidget {
                   );
                 },
               ),
-          icon: Icon(Icons.calendar_month),
-          label: Text(
+          icon: const Icon(Icons.calendar_month),
+          label: const Text(
             'Select Date',
           )),
     );

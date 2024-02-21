@@ -1,17 +1,13 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:trivago/constants/colour.dart';
-import 'package:trivago/converter/date_time_range_converter.dart';
-import 'package:trivago/features/district/controller/districts_data.dart';
-import 'package:trivago/features/group_book/repository/group_booking_repository.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
+import 'package:trivago/features/group_booking/repository/group_booking_repository.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
 import 'package:trivago/models/room_models/room_model.dart';
-import 'package:trivago/routes/app_router.gr.dart';
+import 'package:trivago/models/room_models/room_model_data.dart';
 
 class GroupDetailsDialog extends ConsumerStatefulWidget {
   const GroupDetailsDialog({
@@ -88,9 +84,9 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(widget.groupBookingData.roomBooked.toString()),
-                  Padding(
-                    child: const Icon(Icons.house),
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: Icon(Icons.house),
                   ),
                   Container(
                     padding: const EdgeInsets.all(2),
@@ -108,7 +104,7 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -133,7 +129,6 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                             selectedRoomList.add(room.name);
                           }
                           setState(() {});
-                          print(selectedRoomList);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -158,49 +153,49 @@ class __ShowDialogState extends ConsumerState<GroupDetailsDialog> {
                   children: [
                     Text(
                       'Name: ${widget.groupBookingData.customerName}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text('Person Count: ${widget.groupBookingData.personCount}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16)),
                     Text(
                       'Phone Number: ${widget.groupBookingData.phoneNumber}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text(
                       'Total Price: ${widget.groupBookingData.totalPrice}฿',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
-                    Divider(),
+                    const Divider(),
                     if (widget.groupBookingData.byCash == true)
-                      Text(
+                      const Text(
                         '•By Cash',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.groupBookingData.hasBreakfastService == true)
-                      Text(
+                      const Text(
                         '•Breakfast Available',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.groupBookingData.unknownBool1 == true)
-                      Text(
+                      const Text(
                         '•村⺠，导游， 司机',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.groupBookingData.unknownBool2 == true)
-                      Text(
+                      const Text(
                         '•股东',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
                       ),
                     if (widget.groupBookingData.unknownBool3 == true)
-                      Text(
+                      const Text(
                         '•政府⼈员',
                         style:
                             TextStyle(color: Pallete.greyColor, fontSize: 12),
@@ -279,12 +274,12 @@ class GroupDetailsButton extends StatelessWidget {
 
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(foregroundColor: colour),
           onPressed: () {
-            final _test = SizedBox();
-            final _show = showDialog(
+            const test = SizedBox();
+            final show = showDialog(
                 context: context,
                 builder: (context) {
                   return Center(
@@ -293,16 +288,17 @@ class GroupDetailsButton extends StatelessWidget {
                       height: 200,
                       decoration: BoxDecoration(
                           color: Pallete.peachColor,
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             confirmTitle,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           Row(
@@ -312,12 +308,12 @@ class GroupDetailsButton extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text(
-                                    'Cancel',
-                                  ),
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.redAccent)),
-                              SizedBox(
+                                      backgroundColor: Colors.redAccent),
+                                  child: const Text(
+                                    'Cancel',
+                                  )),
+                              const SizedBox(
                                 width: 10,
                               ),
                               ElevatedButton(
@@ -327,7 +323,7 @@ class GroupDetailsButton extends StatelessWidget {
                                   // AutoRouter.of(context)
                                   //     .push(GroupBookingOverviewRoute());
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Confirm',
                                   style: TextStyle(color: Colors.black),
                                 ),
@@ -340,13 +336,11 @@ class GroupDetailsButton extends StatelessWidget {
                   );
                 });
             if (button == 'Book' && selectedRoomList.length == roomBooked) {
-              print('dd');
-              _show;
+              show;
             } else if (button == 'Delete') {
-              print('dadada');
-              _show;
+              show;
             } else {
-              _test;
+              test;
             }
           },
           child: Text(button),

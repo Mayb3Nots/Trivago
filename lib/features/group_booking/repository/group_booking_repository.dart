@@ -6,8 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trivago/core/failure.dart';
 import 'package:trivago/core/firebase_provider.dart';
 import 'package:trivago/core/type_defs.dart';
-import 'package:trivago/features/home/controller/home_controller.dart';
-import 'package:trivago/features/home/repository/booking_repository.dart';
+import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/features/state/state.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
 
@@ -46,12 +45,11 @@ class GroupBookingRepository {
           unknownBool1: state.unknownBool1!,
           unknownBool2: state.unknownBool2!,
           unknownBool3: state.unknownBool3!);
-      print(groupBookingData);
+
       await _groupBook.doc().set(groupBookingData.toJson());
 
       return right(groupBookingData);
     } on FirebaseException catch (e) {
-      print(e);
       throw e.message!;
     } catch (e) {
       if (e.toString().contains('Null check operator used on a null value')) {
@@ -60,7 +58,6 @@ class GroupBookingRepository {
         call(e.toString());
       }
 
-      print(e);
       return left(Failure(e.toString()));
     }
   }
