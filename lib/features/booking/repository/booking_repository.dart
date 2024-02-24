@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trivago/constants/firebase_constants.dart';
@@ -6,6 +8,8 @@ import 'package:trivago/core/failure.dart';
 import 'package:trivago/core/firebase_provider.dart';
 import 'package:trivago/core/type_defs.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
+
+import '../controller/booking_controller.dart';
 
 part 'booking_repository.g.dart';
 
@@ -26,7 +30,7 @@ class BookingRepository {
       _firestore.collection(FirebaseConstants.bookingCollection);
 
   FutureEither<BookingData> bookRoom(
-      BookingData data, Function(String) call) async {
+      BookingData data, Function(String) call, WidgetRef ref) async {
     try {
       await _book.doc(data.id).set(data.toJson());
 
@@ -60,6 +64,30 @@ Stream<List<BookingData>> bookings(BookingsRef ref) {
               (e) => BookingData.fromJson({...e.data(), 'id': e.id}),
             )
             .toList(),
+      );
+  //List<BookingData> <- List<Map> <- QuerySnapshot <-
+}
+
+@riverpod
+Stream<List<BookingData>> relevantBookings(BookingsRef ref) {
+  return ref
+      .watch(firestoreProvider)
+      .collection(FirebaseConstants.bookingCollection)
+      .orderBy(
+        'vacantDuration.start',
+      )
+      .snapshots()
+      .map(
+        (value) => value.docs
+            .map(
+          (e) => BookingData.fromJson({...e.data(), 'id': e.id}),
+        )
+            .where(
+          (element) {
+            return element.vacantDuration.end
+                .isAfter(DateTime.now().subtract(Duration(days: 30)));
+          },
+        ).toList(),
       );
 
   //List<BookingData> <- List<Map> <- QuerySnapshot <-

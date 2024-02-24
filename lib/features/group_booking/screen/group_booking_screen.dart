@@ -18,11 +18,19 @@ class GroupBookingScreen extends ConsumerStatefulWidget {
 }
 
 class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
-  GroupBookingController groupBookingController = GroupBookingController();
+  final groupBookingController = GroupBookingController();
+  static final formKey2 = GlobalKey<FormState>();
+  final priceController = TextEditingController();
+
+  @override
+  void dispose() {
+    priceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController priceController = TextEditingController();
+    ref.watch(bookingControllerProvider);
     void updateCalculatedPrice() {
       setState(() {
         priceController.text =
@@ -39,15 +47,16 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
     }
 
     // final availableRoom = groupBookingController.roomCalculator(
-    //     ref.watch(homeControllerProvider).districtID ?? DistrictsID.A, ref);
-    final homeFunction = ref.read(bookingControllerProvider.notifier);
+    //     ref.watch(homeControllerProvider).districtID ?? DistrictsID.A, ref)
 
-    ref.read(bookingControllerProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ElevatedButton.icon(
           onPressed: () {
-            homeFunction.setDistrictID(DistrictsID.A);
+            ref.read(bookingControllerProvider.notifier).clearState();
+            ref
+                .read(bookingControllerProvider.notifier)
+                .setDistrictID(DistrictsID.A);
             showDialog(
                 context: context,
                 builder: (context) {
@@ -60,181 +69,101 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                         var height = MediaQuery.of(context).size.height;
                         var width = MediaQuery.of(context).size.width;
 
-                        return Container(
-                          padding: EdgeInsets.zero,
-                          width: width * 0.8,
-                          height: height * 0.8,
-                          child: ListView(
-                            children: [
-                              Column(
-                                children: [
-                                  SfDateRangePicker(
-                                    enablePastDates: false,
-                                    headerStyle:
-                                        const DateRangePickerHeaderStyle(
-                                            textAlign: TextAlign.start),
-                                    monthCellStyle:
-                                        DateRangePickerMonthCellStyle(
-                                            cellDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(5)),
-                                                border: Border.all(
-                                                    color: Colors.white24))),
-                                    monthViewSettings:
-                                        const DateRangePickerMonthViewSettings(),
-                                    view: DateRangePickerView.month,
-                                    selectionMode:
-                                        DateRangePickerSelectionMode.range,
-                                    onSelectionChanged: (d) {
-                                      final value = d.value;
-                                      if (value is PickerDateRange) {
-                                        if (value.endDate != null) {
-                                          homeFunction.setDateRange(
-                                              DateTimeRange(
-                                                  start: value.startDate!,
-                                                  end: value.endDate!));
-                                          updateCalculatedPrice();
+                        return Form(
+                          key: formKey2,
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            width: width * 0.8,
+                            height: height * 0.8,
+                            child: ListView(
+                              children: [
+                                Column(
+                                  children: [
+                                    SfDateRangePicker(
+                                      enablePastDates: false,
+                                      headerStyle:
+                                          const DateRangePickerHeaderStyle(
+                                              textAlign: TextAlign.start),
+                                      monthCellStyle:
+                                          DateRangePickerMonthCellStyle(
+                                              cellDecoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(5)),
+                                                  border: Border.all(
+                                                      color: Colors.white24))),
+                                      monthViewSettings:
+                                          const DateRangePickerMonthViewSettings(),
+                                      view: DateRangePickerView.month,
+                                      selectionMode:
+                                          DateRangePickerSelectionMode.range,
+                                      onSelectionChanged: (d) {
+                                        final value = d.value;
+                                        if (value is PickerDateRange) {
+                                          if (value.endDate != null) {
+                                            ref
+                                                .read(bookingControllerProvider
+                                                    .notifier)
+                                                .setDateRange(DateTimeRange(
+                                                    start: value.startDate!,
+                                                    end: value.endDate!));
+                                            updateCalculatedPrice();
+                                          } else {
+                                            ref
+                                                .read(bookingControllerProvider
+                                                    .notifier)
+                                                .setDateRange(DateTimeRange(
+                                                    start: value.startDate!,
+                                                    end: value.startDate!));
+                                            updateCalculatedPrice();
+                                          }
                                         } else {
-                                          homeFunction.setDateRange(
-                                              DateTimeRange(
-                                                  start: value.startDate!,
-                                                  end: value.startDate!));
-                                          updateCalculatedPrice();
-                                        }
-                                      } else {
-                                        if (value is DateTimeRange) {
-                                          homeFunction
-                                              .setSelectedDate(value.start);
-                                          updateCalculatedPrice();
-                                        }
-                                      }
-                                    },
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: TextField(
-                                      onChanged: (data) {
-                                        homeFunction.setCustomerName(data);
-                                        homeFunction.setRoomName(data);
-                                      },
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.all(5),
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Name',
-                                      ),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    onChanged: (txt) {
-                                      final data = int.tryParse(txt);
-                                      if (data == null) return;
-                                      homeFunction.setPhoneNumber(data);
-                                    },
-                                    validator: (value) {
-                                      if (value == '') {
-                                        return null;
-                                      } else {
-                                        final data = int.tryParse(value!);
-
-                                        if (data == null) {
-                                          return 'Must contain only Numbers!';
-                                        }
-                                      }
-                                      return null;
-                                    },
-                                    autovalidateMode: AutovalidateMode.always,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: const [],
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(5),
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Phone Number',
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: TextFormField(
-                                      onChanged: (txt) {
-                                        if (txt.isNotEmpty) {
-                                          final data = int.tryParse(txt);
-                                          if (data == null) return;
-                                          homeFunction.setRoomBooked(data);
-                                          updateCalculatedPrice();
-                                        }
-                                      },
-                                      validator: (value) {
-                                        if (value == '') {
-                                          return null;
-                                        } else {
-                                          final data = int.tryParse(value!);
-
-                                          if (data == null) {
-                                            return 'Must contain only Numbers!';
+                                          if (value is DateTimeRange) {
+                                            ref
+                                                .read(bookingControllerProvider
+                                                    .notifier)
+                                                .setSelectedDate(value.start);
+                                            updateCalculatedPrice();
                                           }
                                         }
-                                        return null;
                                       },
-                                      autovalidateMode: AutovalidateMode.always,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: const [],
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.all(5),
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Room Booked',
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) {
+                                          final raw = value ?? '';
+                                          if (raw.isEmpty)
+                                            return 'Field cannot be empty';
+                                        },
+                                        onChanged: ref
+                                            .read(bookingControllerProvider
+                                                .notifier)
+                                            .setCustomerName,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.all(5),
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Name',
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  TextFormField(
-                                    onChanged: (txt) {
-                                      if (txt.isNotEmpty) {
+                                    TextFormField(
+                                      onChanged: (txt) {
                                         final data = int.tryParse(txt);
                                         if (data == null) return;
-                                        homeFunction.setPersonCount(data);
-                                        updateCalculatedPrice();
-                                      }
-                                    },
-                                    validator: (value) {
-                                      if (value == '') {
-                                        return null;
-                                      } else {
-                                        final data = int.tryParse(value!);
-
-                                        if (data == null) {
-                                          return 'Must contain only Numbers!';
-                                        }
-                                      }
-                                      return null;
-                                    },
-                                    autovalidateMode: AutovalidateMode.always,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: const [],
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(5),
-                                      border: OutlineInputBorder(),
-                                      labelText: 'People',
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: TextFormField(
-                                      controller: priceController,
-                                      onChanged: (txt) {
-                                        if (txt.isNotEmpty) {
-                                          final data = int.tryParse(txt);
-                                          if (data == null) return;
-
-                                          homeFunction.setTotalPrice(data);
-                                        }
+                                        ref
+                                            .read(bookingControllerProvider
+                                                .notifier)
+                                            .setPhoneNumber(data);
                                       },
                                       validator: (value) {
-                                        if (value == '') {
-                                          return null;
+                                        if (value?.isEmpty ?? false) {
+                                          return 'Field cannot be empty';
                                         } else {
                                           final data = int.tryParse(value!);
 
@@ -244,32 +173,146 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                         }
                                         return null;
                                       },
-                                      autovalidateMode: AutovalidateMode.always,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.number,
                                       inputFormatters: const [],
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.all(5),
                                         border: OutlineInputBorder(),
-                                        labelText: 'Price',
+                                        labelText: 'Phone Number',
                                       ),
                                     ),
-                                  ),
-                                  const Text(
-                                    'District',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w600),
-                                  ),
-                                  DistrictButtonBar(id: (id) {
-                                    updateCalculatedPrice();
-                                  }),
-                                  GroupBookButton(
-                                    errorCall: (data) {
-                                      show(data);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: TextFormField(
+                                        onChanged: (txt) {
+                                          if (txt.isNotEmpty) {
+                                            final data = int.tryParse(txt);
+                                            if (data == null) return;
+                                            ref
+                                                .read(bookingControllerProvider
+                                                    .notifier)
+                                                .setRoomBooked(data);
+                                            updateCalculatedPrice();
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value?.isEmpty ?? false) {
+                                            return 'Field cannot be empty';
+                                          } else {
+                                            final data = int.tryParse(value!);
+
+                                            if (data == null) {
+                                              return 'Must contain only Numbers!';
+                                            }
+                                          }
+                                          return null;
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: const [],
+                                        decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.all(5),
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Room Booked',
+                                        ),
+                                      ),
+                                    ),
+                                    TextFormField(
+                                      onChanged: (txt) {
+                                        if (txt.isNotEmpty) {
+                                          final data = int.tryParse(txt);
+                                          if (data == null) return;
+                                          ref
+                                              .read(bookingControllerProvider
+                                                  .notifier)
+                                              .setPersonCount(data);
+                                          updateCalculatedPrice();
+                                        }
+                                      },
+                                      validator: (value) {
+                                        if (value == null) return null;
+                                        if (value.isEmpty) {
+                                          return 'Field cannot be empty';
+                                        } else {
+                                          final data = int.tryParse(value!);
+
+                                          if (data == null) {
+                                            return 'Must contain only Numbers!';
+                                          }
+                                        }
+                                        return null;
+                                      },
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: const [],
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.all(5),
+                                        border: OutlineInputBorder(),
+                                        labelText: 'People',
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: TextFormField(
+                                        controller: priceController,
+                                        onChanged: (txt) {
+                                          if (txt.isNotEmpty) {
+                                            final data = int.tryParse(txt);
+                                            if (data == null) return;
+
+                                            ref
+                                                .read(bookingControllerProvider
+                                                    .notifier)
+                                                .setTotalPrice(data);
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value?.isEmpty ?? false) {
+                                            return 'Field cannot be empty';
+                                          } else {
+                                            final data = int.tryParse(value!);
+
+                                            if (data == null) {
+                                              return 'Must contain only Numbers!';
+                                            }
+                                          }
+                                          return null;
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: const [],
+                                        decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.all(5),
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Price',
+                                        ),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'District',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    DistrictButtonBar(id: (id) {
+                                      updateCalculatedPrice();
+                                    }),
+                                    GroupBookButton(
+                                      errorCall: (data) {
+                                        show(data);
+                                      },
+                                      formKey2: formKey2,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -316,7 +359,6 @@ class _DistrictButtonBarState extends ConsumerState<DistrictButtonBar> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(bookingControllerProvider);
     final width = MediaQuery.of(context).size.width;
 
     return ToggleButtons(

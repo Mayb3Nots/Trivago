@@ -38,6 +38,7 @@ dependencies:
   riverpod_generator: ^2.3.9
   collection: ^1.18.0
   get: ^4.6.6
+  fl_chart: ^0.66.2
 
 dev_dependencies:
   flutter_test:

@@ -30,7 +30,7 @@ extension DateTimeExtension on DateTime {
     return isAtSameMomentAs || date.dateOnly.isAfter(dateTime.dateOnly);
   }
 
-  bool? isBeforeOrEqualTo(DateTime dateTime) {
+  bool isBeforeOrEqualTo(DateTime dateTime) {
     final date = this;
     final isAtSameMomentAs = dateTime.dateOnly.isAtSameMomentAs(date.dateOnly);
     return isAtSameMomentAs || date.dateOnly.isBefore(dateTime.dateOnly);

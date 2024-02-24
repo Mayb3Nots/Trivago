@@ -8,7 +8,7 @@ import 'package:trivago/models/room_models/room_model_data.dart';
 class GroupBookingController {
   int roomCalculator(DistrictsID e, WidgetRef ref) {
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
-    final data = ref.read(bookingControllerProvider).timeRange;
+    final data = ref.watch(bookingControllerProvider).timeRange;
     final roomBooked = bookings.where((element) {
       return element.doDateTimeRangesOverlap(
               data?.start ?? DateTime.now(),
@@ -39,10 +39,13 @@ class GroupBookingController {
   }
 
   int calculatingLogic(WidgetRef ref) {
-    final home = ref.watch(bookingControllerProvider);
-    return (roomData[home.districtID]!.first.defaultPrice *
-            home.roomBooked! *
-            ((home.timeRange?.duration.inDays ?? 1) + 1) +
-        50 * (home.personCount ?? 1));
+    return (roomData[ref.read(bookingControllerProvider).districtID]!
+                .first
+                .defaultPrice *
+            ref.read(bookingControllerProvider).roomBooked! *
+            ((ref.read(bookingControllerProvider).timeRange?.duration.inDays ??
+                    1) +
+                1) +
+        50 * (ref.read(bookingControllerProvider).personCount ?? 1));
   }
 }

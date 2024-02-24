@@ -13,22 +13,25 @@ class GroupBookButton extends ConsumerStatefulWidget {
   const GroupBookButton({
     super.key,
     required this.errorCall,
+    required this.formKey2,
   });
   final void Function(String) errorCall;
+  final GlobalKey<FormState> formKey2;
+
   @override
   ConsumerState createState() => _GroupBookButtonState();
 }
 
 class _GroupBookButtonState extends ConsumerState<GroupBookButton> {
   Either bookRoom(HomeState state, WidgetRef ref) {
+    print('DAWDDD');
+    print(state);
     try {
-      return right(ref.read(groupBookingRepositoryProvider).bookRoom(
-        context,
-        state,
-        (data) {
-          widget.errorCall(data);
-        },
-      ));
+      return right(ref
+          .read(groupBookingRepositoryProvider)
+          .bookRoom(context, state, (data) {
+        widget.errorCall(data);
+      }, ref));
     } on FirebaseException catch (e) {
       return left(Failure(e.toString()));
     }
@@ -40,14 +43,19 @@ class _GroupBookButtonState extends ConsumerState<GroupBookButton> {
 
     final availableRoom = groupBookingController.roomCalculator(
         ref.watch(bookingControllerProvider).districtID ?? DistrictsID.A, ref);
-    final home = ref.read(bookingControllerProvider.notifier);
+
     return OutlinedButton(
         onPressed: () {
-          if (ref.watch(bookingControllerProvider).roomBooked! <=
+          final valid = widget.formKey2.currentState?.validate() ?? false;
+          print(valid);
+          if (!valid) return;
+          print(ref.read(bookingControllerProvider).roomBooked!);
+          print(availableRoom);
+          if (ref.read(bookingControllerProvider).roomBooked! <=
               availableRoom) {
             bookRoom(ref.read(bookingControllerProvider), ref);
             Navigator.pop(context);
-          } else {}
+          }
         },
         child: const Text('Book'));
   }

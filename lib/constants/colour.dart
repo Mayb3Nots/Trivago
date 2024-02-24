@@ -10,7 +10,7 @@ class Pallete {
   static var redColor = Colors.red.shade500;
   static var blueColor = Colors.blue.shade300;
   static var peachColor = Color(0xFFeed9c4);
-
+  static var purpleColor = Color(0xFF6750a4);
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: blackColor,

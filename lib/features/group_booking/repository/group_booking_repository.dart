@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trivago/core/failure.dart';
 import 'package:trivago/core/firebase_provider.dart';
 import 'package:trivago/core/type_defs.dart';
+import 'package:trivago/features/booking/controller/booking_controller.dart';
 import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/features/state/state.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
@@ -27,10 +28,11 @@ class GroupBookingRepository {
       : _firestore = firestore;
   CollectionReference get _groupBook =>
       _firestore.collection(FirebaseConstants.groupBookingCollection);
-  FutureEither<GroupBookingData> bookRoom(
-      BuildContext context, HomeState state, Function(String) call) async {
+  FutureEither<GroupBookingData> bookRoom(BuildContext context, HomeState state,
+      Function(String) call, WidgetRef ref) async {
     try {
       GroupBookingData groupBookingData;
+
       groupBookingData = GroupBookingData(
           id: FirebaseFirestore.instance.collection('dog').doc().id,
           districtID: state.districtID!,
@@ -47,7 +49,6 @@ class GroupBookingRepository {
           unknownBool3: state.unknownBool3!);
 
       await _groupBook.doc().set(groupBookingData.toJson());
-
       return right(groupBookingData);
     } on FirebaseException catch (e) {
       throw e.message!;
@@ -85,7 +86,8 @@ class GroupBookingRepository {
                 unknownBool1: data.unknownBool1,
                 unknownBool2: data.unknownBool2,
                 unknownBool3: data.unknownBool3),
-            (p0) => null);
+            (p0) => null,
+            ref);
       } catch (e) {
         rethrow;
       }

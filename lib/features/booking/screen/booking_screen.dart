@@ -17,10 +17,11 @@ class DistrictTiles extends ConsumerWidget {
   });
 
   final RoomModel roomModel;
-
+  static final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, ref) {
     ref.watch(bookingControllerProvider);
+
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
 
     final booking = bookings.firstWhereOrNull(
@@ -61,6 +62,7 @@ class DistrictTiles extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
+        ref.read(bookingControllerProvider.notifier).clearState();
         showDialog(
             context: context,
             builder: (context) {
@@ -88,185 +90,207 @@ class DistrictTiles extends ConsumerWidget {
                       padding: EdgeInsets.zero,
                       width: width * 0.8,
                       height: height * 0.8,
-                      child: ListView(
-                        children: [
-                          Column(
-                            children: [
-                              SfDateRangePicker(
-                                initialDisplayDate: ref
-                                    .read(bookingControllerProvider)
-                                    .selectedDate,
-                                enablePastDates: false,
-                                headerStyle: const DateRangePickerHeaderStyle(
-                                    textAlign: TextAlign.start),
-                                monthCellStyle: DateRangePickerMonthCellStyle(
-                                  blackoutDateTextStyle: TextStyle(
-                                    color: Colors.redAccent.withOpacity(0.4),
-                                  ),
-                                  cellDecoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(5),
+                      child: Form(
+                        key: formKey,
+                        child: ListView(
+                          children: [
+                            Column(
+                              children: [
+                                SfDateRangePicker(
+                                  initialDisplayDate: ref
+                                      .read(bookingControllerProvider)
+                                      .selectedDate,
+                                  enablePastDates: false,
+                                  headerStyle: const DateRangePickerHeaderStyle(
+                                      textAlign: TextAlign.start),
+                                  monthCellStyle: DateRangePickerMonthCellStyle(
+                                    blackoutDateTextStyle: TextStyle(
+                                      color: Colors.redAccent.withOpacity(0.4),
                                     ),
-                                    border: Border.all(color: Colors.white24),
+                                    cellDecoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                      border: Border.all(color: Colors.white24),
+                                    ),
+                                  ),
+                                  monthViewSettings:
+                                      DateRangePickerMonthViewSettings(
+                                    blackoutDates:
+                                        bookingController.blackOutDates(
+                                      ref,
+                                      roomModel.district,
+                                      roomModel.name,
+                                    ),
+                                  ),
+                                  view: DateRangePickerView.month,
+                                  onSelectionChanged: (d) {
+                                    final value = d.value;
+                                    if (value is PickerDateRange) {
+                                      if (value.endDate != null) {
+                                        homeFunction.setDateRange(DateTimeRange(
+                                            start: value.startDate!,
+                                            end: value.endDate!));
+                                        updateCalculatedPrice();
+                                      } else {
+                                        homeFunction.setDateRange(DateTimeRange(
+                                            start: value.startDate!,
+                                            end: value.startDate!));
+                                        updateCalculatedPrice();
+                                      }
+                                    } else {
+                                      if (value is DateTimeRange) {
+                                        homeFunction
+                                            .setSelectedDate(value.start);
+                                        updateCalculatedPrice();
+                                      }
+                                    }
+                                  },
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.range,
+                                ),
+                                // const BookedList(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      final raw = value ?? '';
+                                      if (raw.isEmpty)
+                                        return 'Field cannot be empty';
+                                    },
+                                    onChanged: ref
+                                        .read(
+                                            bookingControllerProvider.notifier)
+                                        .setCustomerName,
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(5),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Name',
+                                    ),
                                   ),
                                 ),
-                                monthViewSettings:
-                                    DateRangePickerMonthViewSettings(
+                                TextFormField(
+                                  onChanged: (txt) {
+                                    final data = int.tryParse(txt);
+                                    if (data == null) return;
+                                    homeFunction.setPhoneNumber(data);
+                                  },
+                                  validator: (value) {
+                                    final raw = value ?? '';
+                                    if (raw.isEmpty)
+                                      return 'Field cannot be empty';
+                                    final data = int.tryParse(raw);
+
+                                    if (data == null) {
+                                      return 'Must contain only Numbers!';
+                                    }
+                                    return null;
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: const [],
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(5),
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Phone Number',
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: TextFormField(
+                                    onChanged: (txt) {
+                                      if (txt.isNotEmpty) {
+                                        final data = int.tryParse(txt);
+                                        if (data == '') {
+                                          return;
+                                        }
+                                        if (data == null) return;
+                                        homeFunction.setPersonCount(data);
+                                        updateCalculatedPrice();
+                                      }
+                                    },
+                                    validator: (value) {
+                                      final raw = value ?? '';
+                                      if (raw.isEmpty)
+                                        return 'Field cannot be empty';
+                                      final data = int.tryParse(raw);
+                                      if (data == null) {
+                                        return 'Must contain only Numbers!';
+                                      }
+
+                                      return null;
+                                    },
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: const [],
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(5),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'People',
+                                    ),
+                                  ),
+                                ),
+                                TextFormField(
+                                  controller: priceController,
+                                  onChanged: (txt) {
+                                    if (txt.isNotEmpty) {
+                                      final data = int.tryParse(txt);
+                                      if (data == null) return;
+                                      homeFunction.setTotalPrice(data);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    final raw = value ?? '';
+                                    if (raw.isEmpty)
+                                      return 'Field cannot be empty';
+                                    final data = int.tryParse(raw);
+                                    if (data == null) {
+                                      return 'Must contain only Numbers!';
+                                    }
+
+                                    return null;
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: const [],
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(5),
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Price',
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.15,
+                                ),
+                                BookButton(
                                   blackoutDates:
                                       bookingController.blackOutDates(
                                     ref,
                                     roomModel.district,
                                     roomModel.name,
                                   ),
-                                ),
-                                view: DateRangePickerView.month,
-                                onSelectionChanged: (d) {
-                                  final value = d.value;
-                                  if (value is PickerDateRange) {
-                                    if (value.endDate != null) {
-                                      homeFunction.setDateRange(DateTimeRange(
-                                          start: value.startDate!,
-                                          end: value.endDate!));
-                                      updateCalculatedPrice();
-                                    } else {
-                                      homeFunction.setDateRange(DateTimeRange(
-                                          start: value.startDate!,
-                                          end: value.startDate!));
-                                      updateCalculatedPrice();
-                                    }
-                                  } else {
-                                    if (value is DateTimeRange) {
-                                      homeFunction.setSelectedDate(value.start);
-                                      updateCalculatedPrice();
-                                    }
-                                  }
-                                },
-                                selectionMode:
-                                    DateRangePickerSelectionMode.range,
-                              ),
-                              // const BookedList(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: TextField(
-                                  onChanged: ref
-                                      .read(bookingControllerProvider.notifier)
-                                      .setCustomerName,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.all(5),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Name',
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                onChanged: (txt) {
-                                  final data = int.tryParse(txt);
-                                  if (data == null) return;
-                                  homeFunction.setPhoneNumber(data);
-                                },
-                                validator: (value) {
-                                  if (value == '') {
-                                    return null;
-                                  } else {
-                                    final data = int.tryParse(value!);
-
-                                    if (data == null) {
-                                      return 'Must contain only Numbers!';
-                                    }
-                                  }
-                                  return null;
-                                },
-                                autovalidateMode: AutovalidateMode.always,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: const [],
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.all(5),
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Phone Number',
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: TextFormField(
-                                  onChanged: (txt) {
-                                    if (txt.isNotEmpty) {
-                                      final data = int.tryParse(txt);
-                                      if (data == null) return;
-                                      homeFunction.setPersonCount(data);
-                                      updateCalculatedPrice();
-                                    }
+                                  parentContext: context,
+                                  name: roomModel.name,
+                                  districtID: roomModel.district,
+                                  availableRoom: availableRoom,
+                                  formKey: formKey,
+                                  errorCall: (data) {
+                                    show(data);
                                   },
-                                  validator: (value) {
-                                    if (value == '') {
-                                      return null;
-                                    } else {
-                                      final data = int.tryParse(value!);
-
-                                      if (data == null) {
-                                        return 'Must contain only Numbers!';
-                                      }
-                                    }
-                                    return null;
-                                  },
-                                  autovalidateMode: AutovalidateMode.always,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: const [],
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.all(5),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'People',
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                controller: priceController,
-                                onChanged: (txt) {
-                                  if (txt.isNotEmpty) {
-                                    final data = int.tryParse(txt);
-                                    if (data == null) return;
-                                    homeFunction.setTotalPrice(data);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == '') {
-                                    return null;
-                                  } else {
-                                    final data = int.tryParse(value!);
-
-                                    if (data == null) {
-                                      return 'Must contain only Numbers!';
-                                    }
-                                  }
-                                  return null;
-                                },
-                                autovalidateMode: AutovalidateMode.always,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: const [],
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.all(5),
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Price',
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * 0.15,
-                              ),
-                              BookButton(
-                                parentContext: context,
-                                name: roomModel.name,
-                                districtID: roomModel.district,
-                                availableRoom: availableRoom,
-                                errorCall: (data) {
-                                  show(data);
-                                },
-                              )
-                            ],
-                          ),
-                        ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

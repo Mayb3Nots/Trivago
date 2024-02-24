@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:trivago/converter/date_time_range_converter.dart';
 import 'package:trivago/features/booking/repository/booking_repository.dart';
 import 'package:trivago/features/group_booking/repository/group_booking_repository.dart';
 
@@ -22,6 +24,19 @@ class BookingController extends _$BookingController {
       byCash: false,
       hasBreakfast: false,
       districtID: DistrictsID.A);
+
+  clearState() {
+    print('DOG');
+    state = HomeState(
+        selectedDate: DateTime.now(),
+        roomBooked: 1,
+        unknownBool1: false,
+        unknownBool2: false,
+        unknownBool3: false,
+        byCash: false,
+        hasBreakfast: false,
+        districtID: DistrictsID.A);
+  }
 
   void setSelectedDate(DateTime date) {
     state = state.copyWith(selectedDate: date);
@@ -126,9 +141,32 @@ class BookingController extends _$BookingController {
 
   int calculatingLogic(WidgetRef ref) {
     final home = ref.watch(bookingControllerProvider);
+    final List<DateTime> specialDates1 = [
+      DateTime(2024, 4, 5),
+      DateTime(2024, 4, 6),
+      DateTime(2024, 4, 7),
+      DateTime(2024, 4, 8)
+    ]; //华⼈年
+    final List<DateTime> specialDates2 = []; //⻢来年
+    int specialDaysCount1 = 0;
+    int specialDaysCount2 = 0;
+    if (home.timeRange != null) {
+      for (DateTime date = home.timeRange!.start;
+          date.isBeforeOrEqualTo(home.timeRange!.end);
+          date = date.add(
+        Duration(days: 1),
+      ),) {
+        if (specialDates1.contains(date)) {
+          specialDaysCount1++;
+        }
+      }
+    }
+
     return (roomData[home.districtID]!.first.defaultPrice *
             home.roomBooked! *
             ((home.timeRange?.duration.inDays ?? 1) + 1) +
-        50 * (home.personCount ?? 1));
+        50 * (home.personCount ?? 1) +
+        300 * specialDaysCount1 +
+        300 * specialDaysCount2);
   }
 }
