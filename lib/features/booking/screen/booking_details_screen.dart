@@ -108,6 +108,17 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Container(
+                    child: Text(widget.bookingData.roomName),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.5),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(6),
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    padding: EdgeInsets.all(2),
+                  ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
                     child: Icon(Icons.house),

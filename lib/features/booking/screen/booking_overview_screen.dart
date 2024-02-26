@@ -135,6 +135,20 @@ class _BookingOverviewScreenState extends ConsumerState<BookingOverviewScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               Container(
+                                                child:
+                                                    Text(bookingData.roomName),
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFFf7f2f9),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(6),
+                                                  ),
+                                                ),
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                padding: EdgeInsets.all(2),
+                                              ),
+                                              Container(
                                                 padding:
                                                     const EdgeInsets.all(2),
                                                 decoration: BoxDecoration(
