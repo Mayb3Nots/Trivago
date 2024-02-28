@@ -95,7 +95,7 @@ class _GroupBookingOverviewScreenState
                                         ),
                                       ),
                                       SizedBox(
-                                        width: width / 2,
+                                        width: width,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,

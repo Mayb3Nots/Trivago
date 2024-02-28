@@ -24,7 +24,7 @@ class DateTimeRangeConverter
 
 extension DateTimeExtension on DateTime {
   DateTime get dateOnly => DateTime(year, month, day);
-  bool? isAfterOrEqualTo(DateTime dateTime) {
+  bool isAfterOrEqualTo(DateTime dateTime) {
     final date = this;
     final isAtSameMomentAs = dateTime.dateOnly.isAtSameMomentAs(date.dateOnly);
     return isAtSameMomentAs || date.dateOnly.isAfter(dateTime.dateOnly);
@@ -41,8 +41,8 @@ extension DateTimeExtension on DateTime {
     DateTime toDateTime,
   ) {
     final date = this;
-    final isAfter = date.isAfterOrEqualTo(fromDateTime) ?? false;
-    final isBefore = date.isBeforeOrEqualTo(toDateTime) ?? false;
+    final isAfter = date.isAfterOrEqualTo(fromDateTime);
+    final isBefore = date.isBeforeOrEqualTo(toDateTime);
     return isAfter && isBefore;
   }
 }

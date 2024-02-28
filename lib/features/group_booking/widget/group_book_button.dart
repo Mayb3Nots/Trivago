@@ -24,8 +24,6 @@ class GroupBookButton extends ConsumerStatefulWidget {
 
 class _GroupBookButtonState extends ConsumerState<GroupBookButton> {
   Either bookRoom(HomeState state, WidgetRef ref) {
-    print('DAWDDD');
-    print(state);
     try {
       return right(ref
           .read(groupBookingRepositoryProvider)
@@ -47,10 +45,9 @@ class _GroupBookButtonState extends ConsumerState<GroupBookButton> {
     return OutlinedButton(
         onPressed: () {
           final valid = widget.formKey2.currentState?.validate() ?? false;
-          print(valid);
+
           if (!valid) return;
-          print(ref.read(bookingControllerProvider).roomBooked!);
-          print(availableRoom);
+
           if (ref.read(bookingControllerProvider).roomBooked! <=
               availableRoom) {
             bookRoom(ref.read(bookingControllerProvider), ref);

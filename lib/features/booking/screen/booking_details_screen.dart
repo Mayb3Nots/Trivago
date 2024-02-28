@@ -22,17 +22,17 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
   @override
   Widget build(BuildContext context) {
     final bookings = ref.watch(bookingsProvider).valueOrNull ?? <BookingData>[];
-
-    final booking = bookings.where(
-      (element) {
-        return element.districtID == widget.bookingData.districtID &&
-            element.doDateTimeRangesOverlap(
-                widget.bookingData.vacantDuration.start,
-                widget.bookingData.vacantDuration.end,
-                element.vacantDuration.start,
-                element.vacantDuration.end);
-      },
-    );
+    //
+    // final booking = bookings.where(
+    //   (element) {
+    //     return element.districtID == widget.bookingData.districtID &&
+    //         element.doDateTimeRangesOverlap(
+    //             widget.bookingData.vacantDuration.start,
+    //             widget.bookingData.vacantDuration.end,
+    //             element.vacantDuration.start,
+    //             element.vacantDuration.end);
+    //   },
+    // );
     List<DateTime> getDaysInBetweenIncludingStartEndDate(
         {required DateTime startDateTime, required DateTime endDateTime}) {
       // Converting dates provided to UTC
@@ -62,20 +62,6 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
       }
       return daysInFormat;
     }
-    //
-    // Color colorDetermine(String name) {
-    //   final selected = selectedRoomList.firstWhereOrNull((element) {
-    //     return element.contains(name);
-    //   });
-    //   if (selected != null) {
-    //     return Colors.green.withOpacity(0.7);
-    //   }
-    //   final booked =
-    //       booking.firstWhereOrNull((element) => element.roomName == name);
-    //   return booked != null
-    //       ? Colors.red.withOpacity(0.7)
-    //       : Colors.grey.withOpacity(0.7);
-    // }
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -109,15 +95,20 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: Text(widget.bookingData.roomName),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.5),
-                      borderRadius: BorderRadius.all(
+                      color: Color(0xFF6750a4).withOpacity(0.5),
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(6),
                       ),
                     ),
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    padding: EdgeInsets.all(2),
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    padding: const EdgeInsets.all(2),
+                    child: Center(
+                        child: Expanded(
+                      child: Text(
+                        widget.bookingData.roomName,
+                      ),
+                    )),
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
@@ -126,11 +117,11 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                   Container(
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5)),
-                        border: Border.all(
-                          color: Pallete.greyColor,
-                        )),
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
+                      border: Border.all(
+                        color: Pallete.greyColor,
+                      ),
+                    ),
                     child: Text(
                       widget.bookingData.districtID.name,
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -138,35 +129,38 @@ class __ShowDialogState extends ConsumerState<DetailsDialog> {
                   ),
                 ],
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  color: Pallete.peachColor.withOpacity(0.6),
-                ),
-                child: SfDateRangePicker(
-                  monthCellStyle: DateRangePickerMonthCellStyle(
-                    blackoutDatesDecoration: BoxDecoration(
-                        border:
-                            Border.all(color: Colors.black.withOpacity(0.3)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    blackoutDateTextStyle: TextStyle(
-                      color: Colors.green.withOpacity(0.6),
-                    ),
-                    cellDecoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                      border: Border.all(color: Colors.white24),
-                    ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: Pallete.peachColor.withOpacity(0.6),
                   ),
-                  view: DateRangePickerView.month,
-                  monthViewSettings: DateRangePickerMonthViewSettings(
-                    blackoutDates: getDaysInBetweenIncludingStartEndDate(
-                        startDateTime: widget.bookingData.vacantDuration.start,
-                        endDateTime: widget.bookingData.vacantDuration.end),
+                  child: SfDateRangePicker(
+                    monthCellStyle: DateRangePickerMonthCellStyle(
+                      blackoutDatesDecoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.black.withOpacity(0.3)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      blackoutDateTextStyle: TextStyle(
+                        color: Colors.green.withOpacity(0.6),
+                      ),
+                      cellDecoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        border: Border.all(color: Colors.white24),
+                      ),
+                    ),
+                    view: DateRangePickerView.month,
+                    monthViewSettings: DateRangePickerMonthViewSettings(
+                      blackoutDates: getDaysInBetweenIncludingStartEndDate(
+                          startDateTime:
+                              widget.bookingData.vacantDuration.start,
+                          endDateTime: widget.bookingData.vacantDuration.end),
+                    ),
                   ),
                 ),
               ),

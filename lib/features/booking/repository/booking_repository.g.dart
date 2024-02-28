@@ -20,7 +20,7 @@ final bookingsProvider = AutoDisposeStreamProvider<List<BookingData>>.internal(
 );
 
 typedef BookingsRef = AutoDisposeStreamProviderRef<List<BookingData>>;
-String _$relevantBookingsHash() => r'c3169c92c99505e3cdcaee6b389048d857d01f4f';
+String _$relevantBookingsHash() => r'0ffc5a328df84244dec53e5a96f2ba657cd108fa';
 
 /// See also [relevantBookings].
 @ProviderFor(relevantBookings)

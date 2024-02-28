@@ -7,10 +7,10 @@ import 'package:trivago/features/auth/controller/auth_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:trivago/features/booking/controller/booking_controller.dart';
 import 'package:trivago/features/home/widget/drawer.dart';
+import 'package:trivago/features/home/widget/home_tab_bar.dart';
 import 'package:trivago/features/home/widget/select_date_button.dart';
 import 'package:trivago/features/group_booking/screen/group_booking_screen.dart';
 import 'package:trivago/features/home/widget/dsitrict_area.dart';
-import 'package:trivago/features/home/widget/tab_bar_view.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
@@ -117,7 +117,7 @@ class _HomeScreenScaffoldState extends ConsumerState<HomeScreenScaffold> {
           const Divider(
             height: 0,
           ),
-          const TabBarArea(),
+          const HomeTabBar(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivago/features/booking/controller/booking_controller.dart';
 import 'package:trivago/models/room_models/room_model_data.dart';
 
-class TabBarArea extends ConsumerStatefulWidget {
-  const TabBarArea({super.key});
+class HomeTabBar extends ConsumerStatefulWidget {
+  const HomeTabBar({super.key});
 
   @override
   ConsumerState createState() => _TabBarAreaState();
 }
 
-class _TabBarAreaState extends ConsumerState<TabBarArea> {
+class _TabBarAreaState extends ConsumerState<HomeTabBar> {
   @override
   Widget build(BuildContext context) {
     return const TabBar(tabs: [

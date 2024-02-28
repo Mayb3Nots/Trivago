@@ -129,24 +129,29 @@ class _BookingOverviewScreenState extends ConsumerState<BookingOverviewScreen> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: width / 2,
+                                          width: width,
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
                                               Container(
-                                                child:
-                                                    Text(bookingData.roomName),
-                                                decoration: BoxDecoration(
+                                                decoration: const BoxDecoration(
                                                   color: Color(0xFFf7f2f9),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                     Radius.circular(6),
                                                   ),
                                                 ),
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 5),
-                                                padding: EdgeInsets.all(2),
+                                                width: 40,
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5),
+                                                padding:
+                                                    const EdgeInsets.all(2),
+                                                child: Text(
+                                                    bookingData.roomName,
+                                                    textAlign:
+                                                        TextAlign.center),
                                               ),
                                               Container(
                                                 padding:

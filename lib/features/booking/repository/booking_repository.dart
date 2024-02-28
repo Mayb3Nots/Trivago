@@ -9,8 +9,6 @@ import 'package:trivago/core/firebase_provider.dart';
 import 'package:trivago/core/type_defs.dart';
 import 'package:trivago/models/booked_models/booked_models.dart';
 
-import '../controller/booking_controller.dart';
-
 part 'booking_repository.g.dart';
 
 final bookingRepositoryProvider = Provider((ref) {

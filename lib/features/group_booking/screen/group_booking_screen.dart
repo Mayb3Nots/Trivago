@@ -38,16 +38,12 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
         ref
             .read(bookingControllerProvider.notifier)
             .setTotalPrice(groupBookingController.calculatingLogic(ref));
-        //
       });
     }
 
     void show(data) {
       showSnackBar(context, data);
     }
-
-    // final availableRoom = groupBookingController.roomCalculator(
-    //     ref.watch(homeControllerProvider).districtID ?? DistrictsID.A, ref)
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -136,8 +132,9 @@ class _TourGroupButtonState extends ConsumerState<GroupBookingScreen> {
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
                                           final raw = value ?? '';
-                                          if (raw.isEmpty)
+                                          if (raw.isEmpty) {
                                             return 'Field cannot be empty';
+                                          }
                                         },
                                         onChanged: ref
                                             .read(bookingControllerProvider

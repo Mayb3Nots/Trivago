@@ -17,6 +17,10 @@ class GeneralDrawer extends ConsumerWidget {
     AutoRouter.of(context).push(const BookingOverviewRoute());
   }
 
+  void navigateToAnalytics(BuildContext context) {
+    AutoRouter.of(context).push(const AnalyticsRoute());
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
@@ -43,6 +47,13 @@ class GeneralDrawer extends ConsumerWidget {
               navigateToGroupBookingOverview(context);
             },
           ),
+          // ListTile(
+          //   title: const Text('Analytics'),
+          //   leading: const Icon(Icons.analytics),
+          //   onTap: () {
+          //     navigateToAnalytics(context);
+          //   },
+          // ),
         ],
       )),
     );

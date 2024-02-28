@@ -158,8 +158,9 @@ class DistrictTiles extends ConsumerWidget {
                                         AutovalidateMode.onUserInteraction,
                                     validator: (value) {
                                       final raw = value ?? '';
-                                      if (raw.isEmpty)
+                                      if (raw.isEmpty) {
                                         return 'Field cannot be empty';
+                                      }
                                     },
                                     onChanged: ref
                                         .read(
@@ -182,8 +183,9 @@ class DistrictTiles extends ConsumerWidget {
                                   },
                                   validator: (value) {
                                     final raw = value ?? '';
-                                    if (raw.isEmpty)
+                                    if (raw.isEmpty) {
                                       return 'Field cannot be empty';
+                                    }
                                     final data = int.tryParse(raw);
 
                                     if (data == null) {
@@ -218,8 +220,9 @@ class DistrictTiles extends ConsumerWidget {
                                     },
                                     validator: (value) {
                                       final raw = value ?? '';
-                                      if (raw.isEmpty)
+                                      if (raw.isEmpty) {
                                         return 'Field cannot be empty';
+                                      }
                                       final data = int.tryParse(raw);
                                       if (data == null) {
                                         return 'Must contain only Numbers!';
@@ -249,8 +252,9 @@ class DistrictTiles extends ConsumerWidget {
                                   },
                                   validator: (value) {
                                     final raw = value ?? '';
-                                    if (raw.isEmpty)
+                                    if (raw.isEmpty) {
                                       return 'Field cannot be empty';
+                                    }
                                     final data = int.tryParse(raw);
                                     if (data == null) {
                                       return 'Must contain only Numbers!';

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "835474148480-1p91uvnqi14cocra8jupnnnimlo59c98.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trivago",
+            "certificate_hash": "4373dfcbf0d1abec809580da0eccce71865dacfc"
+          }
+        },
+        {
           "client_id": "835474148480-3elj313ngu088b8fjnh9b7s6f3hva443.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -39,10 +47,11 @@
               "client_type": 3
             },
             {
-              "client_id": "835474148480-c66hf214bhhi74f4fugffg4c3h291m8e.apps.googleusercontent.com",
+              "client_id": "835474148480-81mvj92hhksksbsqd5c9k717coa6vm92.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.trivago"
+                "bundle_id": "com.arc.trivago",
+                "app_store_id": "6478163614"
               }
             }
           ]

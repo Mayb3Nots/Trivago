@@ -39,22 +39,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
     ]);
-    UserModel? userModel;
-    // void getData(WidgetRef ref, User data) async {
-    //   userModel = await ref
-    //       .watch(authControllerProvider.notifier)
-    //       .getUserData(data.uid)
-    //       .first;
-    //   ref.read(userProvider.notifier).update((state) => userModel);
-    //   setState(() {});
-    // }
 
     AppRouter appRouter = AppRouter(ref: ref);
     return ref.watch(authStateChangeProvider).when(
         data: (data) => MaterialApp.router(
               routerConfig: appRouter.config(),
               debugShowCheckedModeBanner: false,
-              title: 'Demo',
+              title: 'Trivago',
               theme: Pallete.darkModeAppTheme,
             ),
         error: (error, stackTrace) => ErrorText(error: error.toString()),
